@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1">
+		<title>JS Pirates - Vanilla ES6 OOP Javascript Game</title>
+		<link href="https://fonts.googleapis.com/css?family=Handlee" rel="stylesheet">
+		<link href="css/main.css" rel="stylesheet">
+		<meta name="author" content="Matthew Page">
+	</head>
+	<body>
+		<div class="wrapper">
+			<div id="intro">
+				<h1>JS Pirates - Day 1</h1>
+				<p>A simply coded example of an Object Oriented pirate ship type game.</p>
+				<p>Basic world setup, islands in the ocean, moveable ship</p>
+				<h3>Features</h3>
+				<ul>
+					<li>1,000,000 block map</li>
+					<li>Perlin noise random generated map</li>
+					<li>Discoverable world, map fills in as you go</li>
+					<li>Javascript ES6 style coding</li>
+				</ul>
+				<p class="info"><a href="https://github.com/MatthewPageUK/js-pirates" target="_blank">Explore the code on gitHub</a></p>
+				<p class="info">Use the Arrow keys to move and turn</p>
+				<p>By <a href="http://www.mjp.co/">Matthew Page</a> - Jan 2019</p>
+			</div>
+			<div class="wrapper">
+				<div id="game">
+					<div id="player1" class="player1"></div>
+					<canvas width="640px" height="480px" id="viewport"></canvas>
+				</div>
+				<div id="gameInfo" >
+					<h2>World Map</h2>
+					<canvas width='100px' height='100px' id="worldmap"></canvas>
+					<h2>Resources</h2>
+					<p>Gold<br>Wood<br>Gun Powder</p>
+				</div>
+			</div>
+		</div>
+		
+		<script src='noisejs-master/perlin.js'></script>
+		<script src="js/sprite.js" type="text/javascript"></script>
+		<script src="js/world.js" type="text/javascript"></script>
+		<script src="js/viewport.js" type="text/javascript"></script>
+		<script src="js/player.js" type="text/javascript"></script>
+		<script src="js/worldmap.js" type="text/javascript"></script>
+		<script src="js/pirate-game.js" type="text/javascript"></script>
+		<script type="text/javascript">
+			/**
+			 * Start the game running.
+			 */
+			const myGame = new PirateGame();
+		</script>
+	</body>
+</html>

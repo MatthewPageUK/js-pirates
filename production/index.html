@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1">
+		<title>JS Pirates - Vanilla ES6 OOP Javascript Game (Production version ES5)</title>
+		<link href="https://fonts.googleapis.com/css?family=Handlee" rel="stylesheet">
+		<link href="css/main.css" rel="stylesheet">
+		<meta name="author" content="Matthew Page">
+	</head>
+	<body>
+		<div class="wrapper">
+			<div id="intro">
+				<h1>JS Pirates - Day 1</h1>
+				<p>A simply coded example of an Object Oriented pirate ship type game.</p>
+				<p>Basic world setup, islands in the ocean, moveable ship</p>
+				<h3>Features</h3>
+				<ul>
+					<li>1,000,000 block map</li>
+					<li>Perlin noise random generated map</li>
+					<li>Discoverable world, map fills in as you go</li>
+					<li>Javascript ES6 style coding</li>
+				</ul>
+				<p class="info"><a href="https://github.com/MatthewPageUK/js-pirates" target="_blank">Explore the code on gitHub</a></p>
+				<p class="info">Use the Arrow keys to move and turn</p>
+				<p>By <a href="http://www.mjp.co/">Matthew Page</a> - Jan 2019</p>
+			</div>
+			<div class="wrapper">
+				<div id="game">
+					<div id="player1" class="player1"></div>
+					<canvas width="640px" height="480px" id="viewport"></canvas>
+				</div>
+				<div id="gameInfo" >
+					<h2>World Map</h2>
+					<canvas width='100px' height='100px' id="worldmap"></canvas>
+					<h2>Resources</h2>
+					<p>Gold<br>Wood<br>Gun Powder</p>
+				</div>
+			</div>
+		</div>
+		<p>Production version converted to ES5</p>
+		<script type="text/javascript">
+ 
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+			
+(function(global){
+  var module = global.noise = {};
+  function Grad(x, y, z) {
+    this.x = x; this.y = y; this.z = z;
+  }
+  Grad.prototype.dot2 = function(x, y) {
+    return this.x*x + this.y*y;
+  };
+  Grad.prototype.dot3 = function(x, y, z) {
+    return this.x*x + this.y*y + this.z*z;
+  };
+  var grad3 = [new Grad(1,1,0),new Grad(-1,1,0),new Grad(1,-1,0),new Grad(-1,-1,0),
+               new Grad(1,0,1),new Grad(-1,0,1),new Grad(1,0,-1),new Grad(-1,0,-1),
+               new Grad(0,1,1),new Grad(0,-1,1),new Grad(0,1,-1),new Grad(0,-1,-1)];
+  var p = [151,160,137,91,90,15,
+  131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,
+  190, 6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,
+  88,237,149,56,87,174,20,125,136,171,168, 68,175,74,165,71,134,139,48,27,166,
+  77,146,158,231,83,111,229,122,60,211,133,230,220,105,92,41,55,46,245,40,244,
+  102,143,54, 65,25,63,161, 1,216,80,73,209,76,132,187,208, 89,18,169,200,196,
+  135,130,116,188,159,86,164,100,109,198,173,186, 3,64,52,217,226,250,124,123,
+  5,202,38,147,118,126,255,82,85,212,207,206,59,227,47,16,58,17,182,189,28,42,
+  223,183,170,213,119,248,152, 2,44,154,163, 70,221,153,101,155,167, 43,172,9,
+  129,22,39,253, 19,98,108,110,79,113,224,232,178,185, 112,104,218,246,97,228,
+  251,34,242,193,238,210,144,12,191,179,162,241, 81,51,145,235,249,14,239,107,
+  49,192,214, 31,181,199,106,157,184, 84,204,176,115,121,50,45,127, 4,150,254,
+  138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180];
+  var perm = new Array(512);
+  var gradP = new Array(512);
+  module.seed = function(seed) {
+    if(seed > 0 && seed < 1) {
+      seed *= 65536;
+    }
+    seed = Math.floor(seed);
+    if(seed < 256) {
+      seed |= seed << 8;
+    }
+    for(var i = 0; i < 256; i++) {
+      var v;
+      if (i & 1) {
+        v = p[i] ^ (seed & 255);
+      } else {
+        v = p[i] ^ ((seed>>8) & 255);
+      }
+      perm[i] = perm[i + 256] = v;
+      gradP[i] = gradP[i + 256] = grad3[v % 12];
+    }
+  };
+  module.seed(0);
+  var F2 = 0.5*(Math.sqrt(3)-1);
+  var G2 = (3-Math.sqrt(3))/6;
+  var F3 = 1/3;
+  var G3 = 1/6;
+  function fade(t) {
+    return t*t*t*(t*(t*6-15)+10);
+  }
+  function lerp(a, b, t) {
+    return (1-t)*a + t*b;
+  }
+  module.perlin2 = function(x, y) {
+    var X = Math.floor(x), Y = Math.floor(y);
+    x = x - X; y = y - Y;
+    X = X & 255; Y = Y & 255;
+    var n00 = gradP[X+perm[Y]].dot2(x, y);
+    var n01 = gradP[X+perm[Y+1]].dot2(x, y-1);
+    var n10 = gradP[X+1+perm[Y]].dot2(x-1, y);
+    var n11 = gradP[X+1+perm[Y+1]].dot2(x-1, y-1);
+    var u = fade(x);
+    return lerp(
+        lerp(n00, n10, u),
+        lerp(n01, n11, u),
+       fade(y));
+  };
+   module.perlin3 = function(x, y, z) {
+    var X = Math.floor(x), Y = Math.floor(y), Z = Math.floor(z);
+    x = x - X; y = y - Y; z = z - Z;
+   X = X & 255; Y = Y & 255; Z = Z & 255;
+    var n000 = gradP[X+  perm[Y+  perm[Z  ]]].dot3(x,   y,     z);
+    var n001 = gradP[X+  perm[Y+  perm[Z+1]]].dot3(x,   y,   z-1);
+    var n010 = gradP[X+  perm[Y+1+perm[Z  ]]].dot3(x,   y-1,   z);
+    var n011 = gradP[X+  perm[Y+1+perm[Z+1]]].dot3(x,   y-1, z-1);
+    var n100 = gradP[X+1+perm[Y+  perm[Z  ]]].dot3(x-1,   y,   z);
+    var n101 = gradP[X+1+perm[Y+  perm[Z+1]]].dot3(x-1,   y, z-1);
+    var n110 = gradP[X+1+perm[Y+1+perm[Z  ]]].dot3(x-1, y-1,   z);
+    var n111 = gradP[X+1+perm[Y+1+perm[Z+1]]].dot3(x-1, y-1, z-1);
+    var u = fade(x);
+    var v = fade(y);
+    var w = fade(z);
+    return lerp(
+        lerp(
+          lerp(n000, n100, u),
+          lerp(n001, n101, u), w),
+        lerp(
+          lerp(n010, n110, u),
+          lerp(n011, n111, u), w),
+       v);
+  };
+})(this);
+
+var Sprite = function () {
+	function Sprite(game, id, posX, posY, width, height, velocity, direction, hitPoints) {
+		_classCallCheck(this, Sprite);
+
+		this.id = id;
+		this.isActive = true;
+		this.game = game;
+		this.posX = posX;
+		this.posY = posY;
+		this.width = width;
+		this.height = height;
+		this.velocity = velocity;
+		this.direction = direction;
+		this.hitPoints = hitPoints;
+		this.domElement = false;
+	}
+
+	_createClass(Sprite, [{
+		key: 'makeDomElement',
+		value: function makeDomElement(css) {
+			this.makeDomElementInside(this.game, css);
+			return true;
+		}
+	}, {
+		key: 'makeDomElementInside',
+		value: function makeDomElementInside(parent, css) {
+			var div = document.createElement('div');
+			div.id = this.id;
+			div.setAttribute('class', css);
+			parent.domElement.appendChild(div);
+			return true;
+		}
+	}, {
+		key: 'destroyDomElement',
+		value: function destroyDomElement() {
+			this.domElement.parentNode.removeChild(this.domElement);
+			return true;
+		}
+	}, {
+		key: 'update',
+		value: function update() {
+			if (this.isActive) {
+				this.move();
+				this.draw();
+			}
+			return true;
+		}
+	}, {
+		key: 'move',
+		value: function move() {
+
+			return true;
+		}
+	}, {
+		key: 'draw',
+		value: function draw() {
+			if (this.isActive) {
+				this.domElement.style.left = Math.round(this.posX) + 'px';
+				this.domElement.style.top = Math.round(this.posY) + 'px';
+				this.domElement.style.width = Math.round(this.width) + 'px';
+				this.domElement.style.height = Math.round(this.height) + 'px';
+			}
+		}
+	}, {
+		key: 'detectCollisionWith',
+		value: function detectCollisionWith(sprite) {
+			return !(this.posY + this.height < sprite.posY || this.posY > sprite.posY + sprite.height || this.posX + this.width < sprite.posX || this.posX > sprite.posX + sprite.width);
+		}
+	}, {
+		key: 'inMe',
+		value: function inMe(x, y) {
+			return x > this.posX && x < this.posX + this.width && y > this.posY && y < this.posY + this.height;
+		}
+	}, {
+		key: 'receiveDamage',
+		value: function receiveDamage(damage) {
+			this.hitPoints -= damage;
+			return this.hitPoints <= 0 ? true : false;
+		}
+	}, {
+		key: 'receiveHealth',
+		value: function receiveHealth(health) {
+			this.hitPoints += health;
+			return true;
+		}
+	}]);
+
+	return Sprite;
+}();
+
+var World = function () {
+	function World(width, height, blockSize) {
+		_classCallCheck(this, World);
+
+		this.width = width;
+		this.height = height;
+		this.blockSize = blockSize;
+		this.blockMap = [];
+		this.makeBlockArray();
+		this.makeNoiseMap();
+	}
+
+	_createClass(World, [{
+		key: 'makeNoiseMap',
+		value: function makeNoiseMap() {
+			noise.seed(Math.random());
+			for (var x = 0; x < this.width; x++) {
+				for (var y = 0; y < this.height; y++) {
+					var value = Math.abs(noise.perlin2(x / 100, y / 100));
+					value *= 256;
+					if (value > 75 && value < 80) {
+						this.blockMap[y][x] = 2;
+					} else if (value > 75) {
+						this.blockMap[y][x] = 1;
+					} else {
+						this.blockMap[y][x] = 0;
+					}
+				}
+			}
+		}
+	}, {
+		key: 'isOceanAtGrid',
+		value: function isOceanAtGrid(gridX, gridY) {
+			if (gridX < 0 || gridX > 999 || gridY < 0 || gridY > 999) return true;
+			return this.blockMap[gridY][gridX] == 0;
+		}
+	}, {
+		key: 'isLandAtGrid',
+		value: function isLandAtGrid(gridX, gridY) {
+			return !this.isOceanAt(gridX, gridY);
+		}
+	}, {
+		key: 'isOceanAt',
+		value: function isOceanAt(x, y) {
+			var gridX = Math.floor(x / this.blockSize);
+			var gridY = Math.floor(y / this.blockSize);
+			return this.isOceanAtGrid(gridX, gridY);
+		}
+	}, {
+		key: 'isLandAt',
+		value: function isLandAt(x, y) {
+			return !this.isOceanAt(x, y);
+		}
+	}, {
+		key: 'makeBlockArray',
+		value: function makeBlockArray() {
+			for (var y = 0; y < this.height; y++) {
+				this.blockMap[y] = [];
+				for (var x = 0; x < this.width; x++) {
+					this.blockMap[y][x] = 0;
+				}
+			}
+		}
+	}]);
+
+	return World;
+}();
+
+var Viewport = function () {
+	function Viewport(game, world, player) {
+		_classCallCheck(this, Viewport);
+
+		this.game = game;
+		this.world = world;
+		this.player = player;
+		this.width = this.game.width;
+		this.height = this.game.height;
+		this.domElement = document.getElementById("viewport");
+		this.paper = this.domElement.getContext("2d");
+		this.update();
+	}
+
+	_createClass(Viewport, [{
+		key: 'update',
+		value: function update() {
+			this.paper.clearRect(0, 0, 640, 480);
+			this.paper.fillStyle = "green";
+			var offsetX = this.player.worldX % this.world.blockSize;
+			var offsetY = this.player.worldY % this.world.blockSize;
+			var startX = Math.floor((this.player.worldX - this.width / 2) / this.world.blockSize);
+			var endX = Math.ceil(startX + 41);
+			var startY = Math.floor((this.player.worldY - this.height / 2) / this.world.blockSize);
+			var endY = Math.ceil(startY + 31);
+			var vpX = 0;
+			var vpY = 0;
+			for (var y = startY; y < endY; y++) {
+				vpX = 0;
+				for (var x = startX; x < endX; x++) {
+					if (this.world.blockMap[y][x] == 1) {
+						this.paper.fillStyle = "green";
+						this.paper.fillRect(vpX - offsetX, vpY - offsetY, this.world.blockSize + 1, this.world.blockSize + 1);
+					}
+					if (this.world.blockMap[y][x] == 2) {
+						this.paper.fillStyle = "yellow";
+						this.paper.fillRect(vpX - offsetX, vpY - offsetY, this.world.blockSize + 1, this.world.blockSize + 1);
+					}
+					vpX += this.world.blockSize;
+				}
+				vpY += this.world.blockSize;
+			}
+		}
+	}]);
+
+	return Viewport;
+}();
+
+var Player = function (_Sprite) {
+	_inherits(Player, _Sprite);
+
+	function Player(game, world, worldMap, id) {
+		_classCallCheck(this, Player);
+
+		var _this = _possibleConstructorReturn(this, (Player.__proto__ || Object.getPrototypeOf(Player)).call(this, game, id, game.width / 2 - 48 / 2, game.height / 2 - 91 / 2, 48, 91, 5, 90, 25));
+
+		_this.world = world;
+		_this.worldMap = worldMap;
+		_this.domElement = document.getElementById(id);
+		_this.worldX = Math.floor(_this.world.width / 2) * _this.world.blockSize;
+		_this.worldY = Math.floor(_this.world.height / 2) * _this.world.blockSize;
+		_this.keyMove = false;
+		_this.keyLeft = false;
+		_this.keyRight = false;
+		_this.discoveryDistance = 100;
+		return _this;
+	}
+
+	_createClass(Player, [{
+		key: 'receiveCommand',
+		value: function receiveCommand(type, command) {
+			if (type == 'keydown') {
+				if (command == 'right') {
+					this.keyRight = true;
+					this.keyLeft = false;
+				}
+				if (command == 'left') {
+					this.keyRight = false;
+					this.keyLeft = true;
+				}
+				if (command == 'up') {
+					this.keyMove = true;
+				}
+				if (command == 'fire') return true;
+			} else if (type == 'keyup') {
+				if (command == 'right') {
+					this.keyRight = false;
+				}
+				if (command == 'left') {
+					this.keyLeft = false;
+				}
+				if (command == 'up') {
+					this.keyMove = false;
+				}
+			}
+		}
+	}, {
+		key: 'update',
+		value: function update() {
+			if (this.isActive) {
+				this.move();
+				this.draw();
+				this.domElement.style.transform = "rotate(" + this.direction + "deg)";
+				this.worldMap.discoverCirlceGrid(Math.floor(this.worldX / this.world.blockSize), Math.floor(this.worldY / this.world.blockSize), this.discoveryDistance);
+			}
+		}
+	}, {
+		key: 'move',
+		value: function move() {
+			if (this.keyRight) {
+				this.direction += 2;
+				if (this.direction > 360) this.direction = 0;
+			}
+			if (this.keyLeft) {
+				this.direction -= 2;
+				if (this.direction < 0) this.direction = 360;
+			}
+			if (this.keyMove) {
+
+				var worldX = this.worldX;
+				var worldY = this.worldY;
+
+				if (this.direction >= 0 && this.direction <= 90) {
+					worldX += this.velocity * Math.sin(this.direction * Math.PI / 180);
+					worldY -= this.velocity * Math.cos(this.direction * Math.PI / 180);
+				} else if (this.direction > 90 && this.direction <= 180) {
+					worldX += this.velocity * Math.cos((this.direction - 90) * Math.PI / 180);
+					worldY += this.velocity * Math.sin((this.direction - 90) * Math.PI / 180);
+				} else if (this.direction > 180 && this.direction <= 270) {
+					worldX -= this.velocity * Math.sin((this.direction - 180) * Math.PI / 180);
+					worldY += this.velocity * Math.cos((this.direction - 180) * Math.PI / 180);
+				} else if (this.direction > 270 && this.direction <= 360) {
+					worldX -= this.velocity * Math.cos((this.direction - 270) * Math.PI / 180);
+					worldY -= this.velocity * Math.sin((this.direction - 270) * Math.PI / 180);
+				}
+				if (this.world.isOceanAt(worldX, worldY)) {
+
+					if (worldX < this.game.width / 2) worldX = Math.floor(this.game.width / 2);
+					if (worldY < this.game.height / 2) worldY = Math.floor(this.game.height / 2);
+					if (worldX > this.world.width * this.world.blockSize) worldX = this.world.width * this.world.blockSize;
+					if (worldY > this.world.height * this.world.blockSize) worldY = this.world.height * this.world.blockSize;
+
+					this.worldX = worldX;
+					this.worldY = worldY;
+				}
+			}
+		}
+	}]);
+
+	return Player;
+}(Sprite);
+
+var WorldMap = function () {
+	function WorldMap(game, world) {
+		_classCallCheck(this, WorldMap);
+
+		this.game = game;
+		this.world = world;
+		this.discoveredMap = [];
+		this.domElement = document.getElementById("worldmap");
+		this.paper = this.domElement.getContext("2d");
+
+		this.makeBlockArray();
+	}
+
+	_createClass(WorldMap, [{
+		key: 'makeBlockArray',
+		value: function makeBlockArray() {
+			for (var y = 0; y < this.world.height; y++) {
+				this.discoveredMap[y] = [];
+				for (var x = 0; x < this.world.width; x++) {
+					this.discoveredMap[y][x] = 0;
+				}
+			}
+		}
+	}, {
+		key: 'isDiscoveredAtGrid',
+		value: function isDiscoveredAtGrid(gridX, gridY) {
+			if (gridX < 0 || gridX >= this.world.width || gridY < 0 || gridY >= this.world.height) return false;
+			return this.discoveredMap[gridY][gridX] == 1;
+		}
+	}, {
+		key: 'discoverCirlceGrid',
+		value: function discoverCirlceGrid(x, y, r) {
+			for (var gridY = y - r; gridY <= y + r; gridY++) {
+				for (var gridX = x - r; gridX <= x + r; gridX++) {
+					if ((gridX - x) * (gridX - x) + (gridY - y) * (gridY - y) <= r * r) {
+						this.discoverGrid(gridX, gridY);
+					}
+				}
+			}
+		}
+	}, {
+		key: 'discoverGrid',
+		value: function discoverGrid(gridX, gridY) {
+			if (gridX < 0 || gridX >= this.world.width || gridY < 0 || gridY >= this.world.height) return false;
+			this.discoveredMap[gridY][gridX] = 1;
+			return true;
+		}
+	}, {
+		key: 'update',
+		value: function update() {
+			this.paper.clearRect(0, 0, 1100, 1100);
+
+			for (var y = 0; y < this.world.height; y += 10) {
+				for (var x = 0; x < this.world.width; x += 10) {
+					if (this.discoveredMap[y][x] == 1) {
+						if (this.world.blockMap[y][x] == 1) {
+							this.paper.fillStyle = "peru";
+							this.paper.fillRect(x / 10, y / 10, 1, 1);
+						} else if (this.world.blockMap[y][x] == 2) {
+							this.paper.fillStyle = "peru";
+							this.paper.fillRect(x / 10, y / 10, 1, 1);
+						} else {}
+					}
+				}
+			}
+			this.paper.fillStyle = "red";
+			this.paper.fillRect(this.game.player.worldX / 10 / this.world.blockSize, this.game.player.worldY / 10 / this.world.blockSize, 2, 2);
+			this.paper.beginPath();
+			this.paper.arc(this.game.player.worldX / 10 / this.world.blockSize, this.game.player.worldY / 10 / this.world.blockSize, 10, 0, 2 * Math.PI);
+			this.paper.lineWidth = 1;
+			this.paper.strokeStyle = 'tan';
+			this.paper.stroke();
+		}
+	}]);
+
+	return WorldMap;
+}();
+
+var PirateGame = function () {
+	function PirateGame() {
+		_classCallCheck(this, PirateGame);
+
+		this.width = 640;
+		this.height = 480;
+		this.isPaused = false;
+		this.domElement = document.getElementById('game');
+
+		this.world = new World(1000, 1000, 16);
+		this.worldMap = new WorldMap(this, this.world);
+		this.player = new Player(this, this.world, this.worldMap, "player1");
+		this.viewport = new Viewport(this, this.world, this.player);
+
+		document.addEventListener("keydown", this, false);
+		document.addEventListener("keyup", this, false);
+		this.update();
+	}
+
+	_createClass(PirateGame, [{
+		key: 'handleEvent',
+		value: function handleEvent(e) {
+			switch (e.key) {
+				case "ArrowDown":
+					e.preventDefault();
+					this.player.receiveCommand(e.type, 'down');
+					break;
+				case "ArrowUp":
+					e.preventDefault();
+					this.player.receiveCommand(e.type, 'up');
+					break;
+				case "ArrowLeft":
+					e.preventDefault();
+					this.player.receiveCommand(e.type, 'left');
+					break;
+				case "ArrowRight":
+					e.preventDefault();
+					this.player.receiveCommand(e.type, 'right');
+					break;
+				case " ":
+					e.preventDefault();
+					this.player.receiveCommand(e.type, 'fire');
+					break;
+			}
+			return false;
+		}
+	}, {
+		key: 'update',
+		value: function update() {
+			var _this2 = this;
+
+			if (!this.isPaused) {
+				this.player.update();
+				this.viewport.update();
+				this.worldMap.update();
+			}
+
+			window.requestAnimationFrame(function () {
+				return _this2.update();
+			});
+		}
+	}, {
+		key: 'pauseToggle',
+		value: function pauseToggle() {
+			this.isPaused = this.isPaused ? false : true;
+		}
+	}]);
+
+	return PirateGame;
+}();
+
+var myGame = new PirateGame();
+
+		</script>
+	</body>
+</html>

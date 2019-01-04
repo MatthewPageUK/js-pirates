@@ -1,0 +1,90 @@
+body { font-family: 'Handlee', cursive; }
+
+div {
+	position: relative; 
+	overflow: hidden;
+}
+#intro {
+	width: 280px; 
+	min-height: 440px;
+	float: left;
+	margin: 10px;
+	padding: 20px;
+	border: 2px solid peru;  
+	border-radius: 5px;
+}
+#intro h1 {
+	margin: 0 0 10px 0;
+	padding: 0px;
+}
+#intro p {
+	margin: 0 0 10px 0;
+	padding: 0px;
+}
+#intro p.info {
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	padding: 10px;
+	font-weight: bold;
+}
+#intro ul {
+	margin: 0 0 10px 0;
+	padding: 0 0 0 20px;
+}
+#intro ul li {
+	margin: 0 0 10px 0;
+	padding: 0px;
+}
+#game {
+	width: 640px;
+	height: 480px;
+	margin: 10px;
+	border: 2px solid peru;
+	border-radius: 5px;
+	float: left;
+}
+#gameInfo { 
+	width: 200px; 
+	height: 440px;
+	float: left; 
+	border: 2px solid peru;  
+	border-radius: 5px;
+	margin: 10px;
+	padding: 20px;
+}
+#gameInfo h2 {
+	margin: 0 0 10px 0;
+	padding: 0px;
+}
+#gameInfo p { 
+	margin: 0 0 10px 0;
+	padding: 0px;
+}
+
+#player1 {
+	position: absolute;
+	top: 200px;
+	left: 305px;
+	width: 48px;
+	height: 91px;
+	background-image: url(../gfx/player.png);
+	z-index: 10100;
+}
+#viewport {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	background-color: cornflowerblue;
+}
+#worldmap {
+	width: 200px;
+	height: 200px;
+	background-image: url(../gfx/world-map.png);
+	background-size: contain;
+}
+
+
+
+
+
+
