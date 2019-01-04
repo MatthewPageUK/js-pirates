@@ -70,7 +70,7 @@ class WorldMap {
 	 */
 	discoverGrid(gridX,gridY) {
 		if(gridX < 0 || gridX >= this.world.width || gridY < 0 || gridY >= this.world.height) return false;
-		this.discoveredMap[gridY][gridX] = 1
+		this.discoveredMap[gridY][gridX] = 1;
 		return true;
 	}
 	
@@ -84,20 +84,29 @@ class WorldMap {
 		/* Loop through whole world, skip 10 */
 		for(let y = 0; y < this.world.height; y+=10) {
 			for(let x = 0; x < this.world.width; x+=10) {
-				if(this.discoveredMap[y][x]==1) {
-					if(this.world.blockMap[y][x] == 1) {
-						this.paper.fillStyle = "peru";
-						this.paper.fillRect(x/10, y/10, 1, 1);
-					} else if(this.world.blockMap[y][x] == 2) {
-						this.paper.fillStyle = "peru";
-						this.paper.fillRect(x/10, y/10, 1, 1);	
-					} else {
-						//this.paper.fillStyle = "cornflowerblue";
-						//this.paper.fillRect(x/10, y/10, 1, 1);
+				if(this.isDiscoveredAtGrid(x,y)) {
+					switch(this.world.getBlockAtGrid(x,y)) {
+						case 1 :
+							this.paper.fillStyle = "peru";
+							this.paper.fillRect(x/10, y/10, 1, 1);
+							break;
+						case 2 :
+							this.paper.fillStyle = "peru";
+							this.paper.fillRect(x/10, y/10, 1, 1);	
+							break;
+						default :
+							//console.log(this.world.blockMap[y][x]);
+							break;
 					}
 				}
 			}
 		}
+		
+		/* Port positions */
+		this.world.ports.forEach((port) => {
+			this.paper.fillStyle = "black";
+			this.paper.fillRect(port.gridX/10, port.gridY/10, 2, 2);	
+		});
 
 		/* Player position and discovery circle */
 		this.paper.fillStyle = "red";

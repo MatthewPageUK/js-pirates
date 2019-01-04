@@ -52,6 +52,9 @@ class Viewport {
 		/* Position of the block in the viewport */
 		let vpX = 0;
 		let vpY = 0;
+
+		let img = new Image();
+		img.src = 'gfx/port.png';
 		
 		/* Loop through the selected blocks and draw them on screen */
 		for(let y = startY; y < endY; y++) {
@@ -64,6 +67,12 @@ class Viewport {
 				if(this.world.blockMap[y][x] == 2) {
 					this.paper.fillStyle = "yellow";
 					this.paper.fillRect(vpX-offsetX, vpY-offsetY, this.world.blockSize+1, this.world.blockSize+1);
+				}
+				if(this.world.blockMap[y][x] == 5) {
+					//img.addEventListener('load', function() {
+						this.paper.drawImage(img, vpX-offsetX, vpY-offsetY);
+					//}, false);
+					
 				}
 				vpX += this.world.blockSize;
 			}

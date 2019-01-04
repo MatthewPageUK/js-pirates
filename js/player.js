@@ -24,7 +24,7 @@ class Player extends Sprite {
 		this.keyMove = false;
 		this.keyLeft = false;
 		this.keyRight = false;
-		this.discoveryDistance = 100;
+		this.discoveryDistance = 200;
 	}
 	/**
 	 * Get the keydown and keyup from the main script calls

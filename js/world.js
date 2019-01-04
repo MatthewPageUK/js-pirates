@@ -5,6 +5,7 @@
  * 0 = Water
  * 1 = Land
  * 2 = Beach
+ * 5 = Port
  *
  * @todo - 3D noise map, make mountains
  * @todo - Make beaches more natural, coves and inlets
@@ -27,8 +28,27 @@ class World {
 		this.height = height;
 		this.blockSize = blockSize;
 		this.blockMap = [];
+		this.ports = [];
 		this.makeBlockArray();
 		this.makeNoiseMap();
+		
+		this.devMakePorts(35);
+	}
+	devMakePorts(n) {
+		
+		while(this.ports.length < n) {
+		
+			let gridX = Math.floor(Math.random() * this.width);
+			let gridY = Math.floor(Math.random() * this.height);
+			if(this.getBlockAtGrid(gridX, gridY)==2) {
+				if( this.isOceanAtGrid(gridX+1, gridY) || this.isOceanAtGrid(gridX, gridY+1) || 
+				   this.isOceanAtGrid(gridX-1, gridY) || this.isOceanAtGrid(gridX, gridY-1) ) {
+					this.blockMap[gridY][gridX] = 5;
+					this.ports.push(new Port(gridX, gridY));
+					console.log(`New port on the coast line`);
+				}
+			}
+		}
 	}
 	/**
 	 * Make a Perlin Noise map for the islands. Use the value to 
@@ -51,6 +71,18 @@ class World {
 				}
 			}
 		}	
+	}
+	/**
+	 * Return the value of the block at gridX , gridY
+	 *
+	 * @method getBlockAtGrid
+	 * @param {number} gridX - The X position in the blockMap array.
+	 * @param {number} gridY - The Y position in the blockMap array.
+	 * @returns {boolean}
+	 */
+	getBlockAtGrid(gridX,gridY) {
+		if(gridX < 0 || gridX > 999 || gridY < 0 || gridY > 999) return 0;
+		return (this.blockMap[gridY][gridX]);
 	}
 	/**
 	 * Is the block at the grid X, Y ocean or not
