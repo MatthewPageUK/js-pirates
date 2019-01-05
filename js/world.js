@@ -23,7 +23,8 @@ class World {
 	 * @param {number} height - Height of the world in blocks.
 	 * @param {number} blockSize - Size of each block (pixels on screen).
 	 */
-	constructor(width, height, blockSize) {
+	constructor(game, width, height, blockSize) {
+		this.game = game;
 		this.width = width;
 		this.height = height;
 		this.blockSize = blockSize;
@@ -31,21 +32,30 @@ class World {
 		this.ports = [];
 		this.makeBlockArray();
 		this.makeNoiseMap();
-		
-		this.devMakePorts(35);
+		this.makePorts(35);
 	}
-	devMakePorts(n) {
-		
+	/**
+	 * Make the Ports on the coastline. Keep making random ones until
+	 * there are enough on the coast. Check at least one neighbouring block 
+	 * is ocean. 
+	 *
+	 * @todo This could fail, or take a long time if there is not enough coastline..
+	 *
+	 * @method makePorts
+	 * @param {number} n - Number of ports to create
+	 */
+	makePorts(n) {
 		while(this.ports.length < n) {
-		
 			let gridX = Math.floor(Math.random() * this.width);
 			let gridY = Math.floor(Math.random() * this.height);
+			/* Is it beach? */
 			if(this.getBlockAtGrid(gridX, gridY)==2) {
+				/* Does it have ocean as a neighbour */
 				if( this.isOceanAtGrid(gridX+1, gridY) || this.isOceanAtGrid(gridX, gridY+1) || 
 				   this.isOceanAtGrid(gridX-1, gridY) || this.isOceanAtGrid(gridX, gridY-1) ) {
+					/* Update the blockMap and create the port */
 					this.blockMap[gridY][gridX] = 5;
-					this.ports.push(new Port(gridX, gridY));
-					console.log(`New port on the coast line`);
+					this.ports.push(new Port(this.game, gridX, gridY));
 				}
 			}
 		}
@@ -83,6 +93,19 @@ class World {
 	getBlockAtGrid(gridX,gridY) {
 		if(gridX < 0 || gridX > 999 || gridY < 0 || gridY > 999) return 0;
 		return (this.blockMap[gridY][gridX]);
+	}
+	/**
+	 * Return the value of the block at worldX, worldY
+	 *
+	 * @method getBlockAt
+	 * @param {number} x - The X position in the world.
+	 * @param {number} y - The Y position in the world.
+	 * @returns {boolean}
+	 */
+	getBlockAt(x,y) {
+		let gridX = Math.floor(x/this.blockSize);
+		let gridY = Math.floor(y/this.blockSize);
+		return (this.getBlockAtGrid(gridX, gridY));
 	}
 	/**
 	 * Is the block at the grid X, Y ocean or not

@@ -53,6 +53,7 @@ class Viewport {
 		let vpX = 0;
 		let vpY = 0;
 
+		/* tmp */
 		let img = new Image();
 		img.src = 'gfx/port.png';
 		
@@ -69,10 +70,7 @@ class Viewport {
 					this.paper.fillRect(vpX-offsetX, vpY-offsetY, this.world.blockSize+1, this.world.blockSize+1);
 				}
 				if(this.world.blockMap[y][x] == 5) {
-					//img.addEventListener('load', function() {
 						this.paper.drawImage(img, vpX-offsetX, vpY-offsetY);
-					//}, false);
-					
 				}
 				vpX += this.world.blockSize;
 			}

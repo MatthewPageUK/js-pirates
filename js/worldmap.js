@@ -12,6 +12,7 @@ class WorldMap {
 		this.world = world;
 		this.discoveredMap = [];
 		this.domElement = document.getElementById("worldmap");
+		this.domElementPosition = document.getElementById("worldmapPosition");
 		this.paper = this.domElement.getContext("2d");
 
 		this.makeBlockArray();
@@ -117,6 +118,9 @@ class WorldMap {
 		this.paper.lineWidth = 1;
 		this.paper.strokeStyle = 'tan';
 		this.paper.stroke();
+		
+		/* Position */
+		this.domElementPosition.innerHTML = `Lat : ${this.game.player.worldX.toFixed(2)} Lng : ${this.game.player.worldY.toFixed(2)}`;
 		
 	}
 }

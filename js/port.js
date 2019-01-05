@@ -14,13 +14,25 @@ class Port {
 	 * @param {number} gridX - The world grid position this port is in
 	 * @param {number} gridY - The world grid position this port is in
 	 */
-	constructor(gridX, gridY) {
-		
+	constructor(game, gridX, gridY) {
+		this.game = game;
+		let index = Math.floor(Math.random()*this.game.namePorts.length);
+		this.name = this.game.namePorts[index];
+		this.game.namePorts.splice(index, 1);
 		this.gridX = gridX;
 		this.gridY = gridY;
-		
-		console.log(`New port at ${gridX} ${gridY}`);
-	
+	}
+	/**
+	 * Get the HTML for the port docking welcome screen
+	 *
+	 * @mathod htmlWelcome
+	 * @returns {string} The HTML string for the welcome screen.
+	 */	
+	get htmlWelcome() {
+		let html = "";
+		html += `<h1>${this.name}</h1>`;
+		html += `<a class="button" href="#" onclick="myGame.player.leavePort(); return false;">Set sail</a>`;
+		return html;
 	}
 	
 }

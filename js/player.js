@@ -7,6 +7,7 @@
  * @property {number} worldX - The X position in the world
  * @property {number} worldY - The Y position in the world
  * @property {number} discoveryDistance - How far into the world can you see (world map)
+ * @property {Port} dockedAt - If we are in dock the Port instance
  */
 class Player extends Sprite {
 	constructor(game, world, worldMap, id) {
@@ -16,15 +17,48 @@ class Player extends Sprite {
 		this.world = world;
 		this.worldMap = worldMap;
 		this.domElement = document.getElementById(id);
-		
-		/* Start in the middle of the map */
-		this.worldX = Math.floor(this.world.width/2)*this.world.blockSize;
-		this.worldY = Math.floor(this.world.height/2)*this.world.blockSize;
-
+		this.dockedAt = false;
 		this.keyMove = false;
 		this.keyLeft = false;
 		this.keyRight = false;
 		this.discoveryDistance = 200;
+		
+		/* Start in the middle of the map */
+		this.worldX = Math.floor(this.world.width/2)*this.world.blockSize;
+		this.worldY = Math.floor(this.world.height/2)*this.world.blockSize;
+	}
+	/**
+	 * Dock at port - called from the update collision detection
+	 *
+	 * @method dockAtPort
+	 * @param {number} gridX - The world grid x position
+	 * @param {number} gridY - The world grid y position
+	 */
+	dockAtPort(gridX, gridY) {
+		/* get the port */
+		this.world.ports.forEach( (port) => {
+			if(port.gridX == gridX && port.gridY == gridY) {
+				this.dockedAt = port;
+				let a = document.getElementById('portDockScreen');
+				/* Show the port welcome screen */
+				a.style.display = 'block';
+				a.innerHTML = port.htmlWelcome;
+				return true;
+			}
+		});
+	}
+	/**
+	 * Set sail from a port, hide the port welcome screen
+	 *
+	 * @method leavePort
+	 */
+	leavePort() {
+		this.dockedAt = false;
+		let a = document.getElementById('portDockScreen');
+		a.style.display = 'none';
+		this.direction += 180;
+		if(this.direction > 359) this.direction = this.direction-360;
+		return true;	
 	}
 	/**
 	 * Get the keydown and keyup from the main script calls
@@ -101,6 +135,7 @@ class Player extends Sprite {
 			let worldX = this.worldX;
 			let worldY = this.worldY;
 			
+			/* Do the movement calculation */
 			if(this.direction >= 0 && this.direction <= 90) {
 				worldX += this.velocity * Math.sin(this.direction*Math.PI/180);
 				worldY -= this.velocity * Math.cos(this.direction*Math.PI/180);
@@ -125,7 +160,17 @@ class Player extends Sprite {
 				/* Move to the new position */
 				this.worldX = worldX;
 				this.worldY = worldY;
-			}			
+			} else {
+			
+				/* Detect port */
+				let block = this.world.getBlockAt(worldX, worldY);
+				
+				// if port - dock with it / show welcome / etc..
+				if(block==5) {
+					this.dockAtPort(Math.floor(worldX/this.world.blockSize), Math.floor(worldY/this.world.blockSize));
+				}
+				
+			}
 		}
 	}
 }

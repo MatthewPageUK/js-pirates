@@ -86,5 +86,38 @@ div {
 
 
 
+#portDockScreen {
+	position: absolute;
+	display: none;
+	width: 500px;
+	height: 300px;
+	top: 90px;
+	left: 70px;
+	z-index: 20000;
+	background-color: white;
+	border: 2px solid tan;
+	border-radius: 5px;
+	padding: 20px;
+}
+#portDockScreen h1 {
+	margin: 0 0 10px 0;
+	padding: 0px;
+	text-align: center;
+}
+#portDockScreen a.button {
+	display: block;
+	position: absolute;
+	width: 60px;
+	right: 20px;
+	bottom: 20px;
+	padding: 10px;
+	background-color: peru;
+	border-radius: 5px;
+	color: white;
+	text-align: center;
+	text-decoration: none;
+}
+
+
 
 
