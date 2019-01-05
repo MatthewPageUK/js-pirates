@@ -7,6 +7,8 @@ It will be a fun game involving trading and fighting on the high seas. Fight oth
 
 For now it's just a random world created with a noise script, and a ship to explore the world in.
 
+5 Jan 2019 - Added random ports, dock at the port
+
 Objective - stay alive...
 
 See the Wiki for more information
