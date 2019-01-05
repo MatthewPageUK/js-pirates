@@ -24,6 +24,7 @@ class PirateGame {
 
 		this.world = new World(this, 1000,1000,16);	
 		this.worldMap = new WorldMap(this, this.world);
+		this.worldClock = new WorldClock(this, "March 3, 1682 09:00:00");
 		this.player = new Player(this, this.world, this.worldMap, "player1");
 		this.viewport = new Viewport(this, this.world, this.player);
 
@@ -71,6 +72,8 @@ class PirateGame {
 	 */
 	update() {
 		if(!this.isPaused) {
+			this.world.update();
+			this.worldClock.update();
 			this.player.update();	
 			this.viewport.update();
 			this.worldMap.update();

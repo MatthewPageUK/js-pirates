@@ -35,6 +35,14 @@ class World {
 		this.makePorts(35);
 	}
 	/**
+	 * Main update loop.
+	 *
+	 * @method update
+	 */
+	update() {
+
+	}
+	/**
 	 * Make the Ports on the coastline. Keep making random ones until
 	 * there are enough on the coast. Check at least one neighbouring block 
 	 * is ocean. 
