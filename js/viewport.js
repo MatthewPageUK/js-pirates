@@ -26,6 +26,7 @@ class Viewport {
 		this.paper = this.domElement.getContext("2d");
 	
 		this.update();
+
 	}
 		
 	/**
@@ -57,16 +58,24 @@ class Viewport {
 		let img = new Image();
 		img.src = 'gfx/port.png';
 		
+		/* Change sea colour based on sunlight */
+		let r = 100 * (this.game.worldClock.sunlight/100);
+		let g = 149 * (this.game.worldClock.sunlight/100);
+		let b = 237 * (this.game.worldClock.sunlight/100);
+		this.domElement.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+		
 		/* Loop through the selected blocks and draw them on screen */
 		for(let y = startY; y < endY; y++) {
 			vpX = 0;
 			for(let x = startX; x < endX; x++) {
 				if(this.world.blockMap[y][x] == 1) {
-					this.paper.fillStyle = "green";
+					let colour = 128 * (this.game.worldClock.sunlight/100);
+					this.paper.fillStyle = `rgb(0, ${colour}, 0)`;
 					this.paper.fillRect(vpX-offsetX, vpY-offsetY, this.world.blockSize+1, this.world.blockSize+1);
 				}
 				if(this.world.blockMap[y][x] == 2) {
-					this.paper.fillStyle = "yellow";
+					let colour = 255 * (this.game.worldClock.sunlight/100);
+					this.paper.fillStyle = `rgb(${colour}, ${colour}, 0)`;
 					this.paper.fillRect(vpX-offsetX, vpY-offsetY, this.world.blockSize+1, this.world.blockSize+1);
 				}
 				if(this.world.blockMap[y][x] == 5) {
