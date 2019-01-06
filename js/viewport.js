@@ -68,13 +68,33 @@ class Viewport {
 		for(let y = startY; y < endY; y++) {
 			vpX = 0;
 			for(let x = startX; x < endX; x++) {
+				
+				/* Ship light */				
+				let distFromShip = Math.sqrt( Math.pow(Math.abs(x-startX-20),2) + Math.pow(Math.abs(y-startY-15),2) );
+				let shipLight = (7/100)*distFromShip*100;
+				if(shipLight>100) shipLight=100;
+				shipLight = 100-shipLight;
+				shipLight = shipLight / 100;
+				//console.log(distFromShip);
+				/* Sunlight */
+				let sunLight = this.game.worldClock.sunlight/100;
+				let allLight = shipLight + sunLight;
+				if(allLight > 1) allLight = 1;
+	
+				if(this.world.blockMap[y][x] == 0) {
+					let r = Math.floor(100 * allLight);
+					let g = Math.floor(149 * allLight);
+					let b = Math.floor(237 * allLight);
+					this.paper.fillStyle = `rgb(${r},${g},${b})`;
+					this.paper.fillRect(vpX-offsetX, vpY-offsetY, this.world.blockSize+1, this.world.blockSize+1);
+				}
 				if(this.world.blockMap[y][x] == 1) {
-					let colour = 128 * (this.game.worldClock.sunlight/100);
+					let colour = Math.floor(128 * allLight);
 					this.paper.fillStyle = `rgb(0, ${colour}, 0)`;
 					this.paper.fillRect(vpX-offsetX, vpY-offsetY, this.world.blockSize+1, this.world.blockSize+1);
 				}
 				if(this.world.blockMap[y][x] == 2) {
-					let colour = 255 * (this.game.worldClock.sunlight/100);
+					let colour = Math.floor(255 * allLight);
 					this.paper.fillStyle = `rgb(${colour}, ${colour}, 0)`;
 					this.paper.fillRect(vpX-offsetX, vpY-offsetY, this.world.blockSize+1, this.world.blockSize+1);
 				}
