@@ -37,6 +37,18 @@ class Player extends Sprite {
 		this.worldY = Math.floor(this.world.height/2)*this.world.blockSize;
 	}
 	/**
+	 * Get the grid X position 
+	 */
+	get gridX() {
+		return Math.floor(this.worldX / this.world.blockSize);	
+	}
+	/**
+	 * Get the grid Y position 
+	 */
+	get gridY() {
+		return Math.floor(this.worldY / this.world.blockSize);	
+	}
+	/**
 	 * Dock at port - called from the update collision detection
 	 *
 	 * @method dockAtPort

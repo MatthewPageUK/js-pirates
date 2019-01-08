@@ -15,8 +15,8 @@ class PirateGame {
 	 */
 	constructor() {
 		
-		this.width = 640;
-		this.height = 480;
+		this.width = window.innerWidth;
+		this.height = window.innerHeight;
 		this.isPaused = false;
 		this.domElement = document.getElementById('game');
 		/* www.fantasynamegenerators.com */
