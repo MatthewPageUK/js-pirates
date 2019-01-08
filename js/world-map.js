@@ -107,6 +107,12 @@ class WorldMap {
 			this.paper.fillRect(port.gridX/10, port.gridY/10, 2, 2);	
 		});
 
+		/* Cargo ship positions */
+		this.game.cargoShips.forEach((ship) => {
+			this.paper.fillStyle = "green";
+			this.paper.fillRect(ship.gridX/10, ship.gridY/10, 2, 2);	
+		});
+
 		/* Player position and discovery circle */
 		this.paper.fillStyle = "red";
 		this.paper.fillRect(this.game.player.worldX / 10 / this.world.blockSize, this.game.player.worldY / 10 / this.world.blockSize, 2, 2);

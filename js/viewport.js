@@ -126,6 +126,24 @@ class Viewport {
 					shipLight = shipLight / 100;
 					this.lightMap[ly][lx] += shipLight;
 				}
+				
+				
+				this.game.cargoShips.forEach( (ship) => {
+					/* Cargo Ship light 		*/	
+					let distFromShip = Math.sqrt( 
+											Math.pow(Math.abs(gridX-Math.floor(ship.worldX / this.world.blockSize)),2) +
+											Math.pow(Math.abs(gridY-Math.floor(ship.worldY / this.world.blockSize)),2) 
+									);
+					if(distFromShip < 25) {
+
+						let shipLight = (distFromShip/25)*100;
+						if(shipLight>100) shipLight=100;
+						shipLight = 100-shipLight;
+						shipLight = shipLight / 100;
+						this.lightMap[ly][lx] += shipLight;
+					}
+					
+				});
 							
 				this.world.ports.forEach( (port) => {
 

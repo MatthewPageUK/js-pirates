@@ -26,8 +26,14 @@ class PirateGame {
 		this.worldMap = new WorldMap(this, this.world);
 		this.worldClock = new WorldClock(this, "March 3, 1682 09:00:00");
 		this.player = new Player(this, this.world, this.worldMap, "player1");
+		
+		this.cargoShips = [];
+		for(let x=1; x<20; x++) {
+			this.cargoShips.push(new CargoShip(this, this.world, this.worldMap, `cargo${x}`));
+		}
 		this.viewport = new Viewport(this, this.world, this.player);
 
+		
 		document.addEventListener("keydown", this, false);
 		document.addEventListener("keyup", this, false);	
 		this.update();		
@@ -77,6 +83,9 @@ class PirateGame {
 			this.player.update();	
 			this.viewport.update();
 			this.worldMap.update();
+			this.cargoShips.forEach((ship)=>{
+				ship.update();
+			});
 		}
 		/* Request this method be called again ... loop forever */
 		window.requestAnimationFrame(() => this.update());
