@@ -5,11 +5,12 @@
  * @author Matthew Page <work@mjp.co>
  * @class Port
  * @extends
+ * @property {ResourceContainer} resources - Our resources (gold, wood etC)
  */
 
 class Port {
 	/**
-	 * Create a new port
+	 * Create a new port with random resources
 	 *
 	 * @param {number} gridX - The world grid position this port is in
 	 * @param {number} gridY - The world grid position this port is in
@@ -21,6 +22,11 @@ class Port {
 		this.game.namePorts.splice(index, 1);
 		this.gridX = gridX;
 		this.gridY = gridY;
+
+		this.resources = new ResourceContainer(this);
+		this.resources.add('gold', Math.floor(Math.random()*1000));
+		this.resources.add('wood', Math.floor(Math.random()*1000));
+		this.resources.add('gunpowder', Math.floor(Math.random()*1000));		
 	}
 	/**
 	 * Get the HTML for the port docking welcome screen
@@ -31,6 +37,10 @@ class Port {
 	get htmlWelcome() {
 		let html = "";
 		html += `<h1>${this.name}</h1>`;
+		/* Interesting - this suggests something wrong with my object model resources.resources is confusing */
+		html += `<p class="resource">Gold - ${this.resources.quantity('gold')}</p>`;
+		html += `<p class="resource">Wood - ${this.resources.quantity('wood')}</p>`;
+		html += `<p class="resource">Gunpowder - ${this.resources.quantity('gunpowder')}</p>`;
 		html += `<a class="button" href="#" onclick="myGame.player.leavePort(); return false;">Set sail</a>`;
 		return html;
 	}

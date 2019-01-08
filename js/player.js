@@ -8,6 +8,7 @@
  * @property {number} worldY - The Y position in the world
  * @property {number} discoveryDistance - How far into the world can you see (world map)
  * @property {Port} dockedAt - If we are in dock the Port instance
+ * @property {ResourceContainer} resources - Our resources (gold, wood etC)
  */
 class Player extends Sprite {
 	constructor(game, world, worldMap, id) {
@@ -22,6 +23,14 @@ class Player extends Sprite {
 		this.keyLeft = false;
 		this.keyRight = false;
 		this.discoveryDistance = 200;
+		this.resources = new ResourceContainer(this);
+		this.resources.add('gold', 100);
+		this.resources.add('wood', 100);
+		this.resources.add('gunpowder', 25);
+		this.resources.add('notaresource', 1);
+		this.resources.remove('gold', 25);
+		
+		console.log(this.resources);
 		
 		/* Start in the middle of the map */
 		this.worldX = Math.floor(this.world.width/2)*this.world.blockSize;
