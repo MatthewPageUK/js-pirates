@@ -22,7 +22,7 @@ class Player extends Sprite {
 		this.keyMove = false;
 		this.keyLeft = false;
 		this.keyRight = false;
-		this.discoveryDistance = 200;
+		this.discoveryDistance = 100;
 		this.resources = new ResourceContainer(this);
 		this.resources.add('gold', 100);
 		this.resources.add('wood', 100);

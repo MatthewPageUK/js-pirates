@@ -22,7 +22,7 @@ class PirateGame {
 		/* www.fantasynamegenerators.com */
 		this.namePorts = ['Scuttle Cove','Full Moon Cove','Red Water Cove','Gunpowder Anchorage','Devil Lagoon','Isle of Rumrunners','Anchorage of Privateers','Port of Hazard','Sanctuary of Grog','Lagoon of Marauders','Seaweed Cave','Maroon Retreat','Demon Cave','Quartermaster Haven','Crocodile Lagoon','Cavern of Mermaids','Retreat of Demons','Atoll of Sharks','Atoll of Last Words','Reef of the Tempest','Newhaven Harbor','Ocean Fall Harbor','South Point Landing','Silvercreek Landing','The Harbor Of Hingpar','The Harbor Of Summercouche','The Harbor Of Eplem','Huntinglow Piers','Chamtawa Port','Leomond Harbor','Eastport Wharf','Marblerock Landing','New Hope Port','Main Brook Piers','The Harbor Of Macaline','The Piers Of Beaugami','The Harbor Of Galsay','Bridgetrie Harbor','Wesnigan Piers','Hampgus Wharf','Heaven Beach Harbor','Candlelight Piers','Dry River Harbor','Greenport Wharf','The Landing Of Caulet','The Port Of Buxland','The Harbor Of Innistos','Brudermis Port','Gibmond Port','Browncroft Port'];
 
-		this.world = new World(this, 1000,1000,16);	
+		this.world = new World(this, 1000,1000,8);	
 		this.worldMap = new WorldMap(this, this.world);
 		this.worldClock = new WorldClock(this, "March 3, 1682 09:00:00");
 		this.player = new Player(this, this.world, this.worldMap, "player1");

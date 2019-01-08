@@ -118,7 +118,7 @@ class WorldMap {
 		this.paper.stroke();
 		
 		/* Position */
-		this.domElementPosition.innerHTML = `Lat : ${this.game.player.worldX.toFixed(2)} Lng : ${this.game.player.worldY.toFixed(2)}`;
+		this.domElementPosition.innerHTML = `FPS : ${Math.floor(this.game.viewport.fps)} Lat : ${this.game.player.worldX.toFixed(2)} Lng : ${this.game.player.worldY.toFixed(2)}`;
 		
 	}
 }
