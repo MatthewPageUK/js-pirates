@@ -28,7 +28,7 @@ class PirateGame {
 		this.player = new Player(this, this.world, this.worldMap, "player1");
 		
 		this.cargoShips = [];
-		for(let x=1; x<20; x++) {
+		for(let x=1; x<2; x++) {
 			this.cargoShips.push(new CargoShip(this, this.world, this.worldMap, `cargo${x}`));
 		}
 		this.viewport = new Viewport(this, this.world, this.player);

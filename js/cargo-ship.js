@@ -30,25 +30,62 @@ class CargoShip extends Sprite {
 		this.worldX = 200+Math.floor(this.world.width/2)*this.world.blockSize;
 		this.worldY = Math.floor(this.world.height/2)*this.world.blockSize;
 		
-		this.destination = this.world.ports[Math.floor(Math.random()*this.world.ports.length)];
+		this.destination = false;
+		this.pickRandomDestination();
 		
 		this.courseCorrection = false;
 		this.courseCorrectionDuration = 0;
 		
+		this.headForDestination();
+		
 				console.log(this);
+	}
+	/**
+	 * Pick random destination port
+	 *
+	 */
+	pickRandomDestination() {
+		this.destination = this.world.ports[Math.floor(Math.random()*this.world.ports.length)];
+		this.headForDestination();
 	}
 	/**
 	 * Head for destination - turn towards the destination port
 	 *
 	 */
 	headForDestination() {
-	
-		let xDiff = this.gridX - this.destination.gridX;
-		let yDiff = this.gridY - this.destination.gridY;
 		
-		if(xDiff<0 && yDiff>0) { // Top right quad
-			// TOA
-		}
+/*
+		function calcAngleDegrees(x, y) {
+  let b = Math.atan2(y, x) * 180 / Math.PI + 90;
+  if(b<0) b=360+b;
+  return b;
+}
+		
+		*/
+		
+  		let b = Math.atan2(this.destination.gridY-this.gridY, this.destination.gridX-this.gridX) * 180 / Math.PI + 90;
+		  if(b<0) b=360+b;
+		this.direction = b;
+
+	/*
+		
+		lng - x
+		lat - y
+		
+        let dLon = (this.destination.gridX-this.gridX);
+        let y = Math.sin(dLon) * Math.cos(this.destination.gridY);
+        let x = Math.cos(this.gridY)*Math.sin(this.destination.gridY) - Math.sin(this.gridY)*Math.cos(this.destination.gridY)*Math.cos(dLon);
+        let brng = (Math.atan2(y, x))* 180 / Math.PI;
+		let b = 360 - ((brng + 360) % 360);
+		b -= 270;
+		if(b<0) b=360+b;
+        this.direction = b;*/
+//		console.log(`Heading ${b}`);
+   /*       var dLon = (lng2-lng1);
+        var y = Math.sin(dLon) * Math.cos(lat2);
+        var x = Math.cos(lat1)*Math.sin(lat2) - Math.sin(lat1)*Math.cos(lat2)*Math.cos(dLon);
+        var brng = this._toDeg(Math.atan2(y, x));
+        return 360 - ((brng + 360) % 360); */
 		
 	}
 	/**
@@ -156,6 +193,13 @@ class CargoShip extends Sprite {
 	 */
 	move() {
 
+		if(this.courseCorrection) {
+			this.courseCorrectionDuration -= 1;
+			if(this.courseCorrectionDuration<1) {
+				this.headForDestination();
+				this.courseCorrection = false;
+			}
+		}
 
 		let worldX = this.worldX;
 		let worldY = this.worldY;
@@ -189,8 +233,9 @@ class CargoShip extends Sprite {
 			
 			/* Do course correction */
 			this.courseCorrection = true;
-			this.courseCorrectionDuration = 180;
-			this.direction += 45;
+			this.courseCorrectionDuration = 300;
+			this.direction += 10;
+			this.direction = Math.floor(Math.random()*360);
 			if(this.direction>360) this.direction = this.direction - 360;
 
 			/* Detect port */
@@ -199,6 +244,11 @@ class CargoShip extends Sprite {
 			// if port - dock with it / show welcome / etc..
 			if(block==5) {
 				this.dockAtPort(Math.floor(worldX/this.world.blockSize), Math.floor(worldY/this.world.blockSize));
+				console.log(`Ship docked at ${this.dockedAt.name} destination ${this.destination.name}`);
+				this.pickRandomDestination();
+				this.leavePort();
+				this.headForDestination();
+				console.log(`New destination ${this.destination.name}`);
 			}
 
 		}
