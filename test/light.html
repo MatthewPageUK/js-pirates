@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1">
+	</head>
+	<body>
+		<style>
+			body { font-size: 0.65em;}
+			td { width: 20px;}
+			tr { height: 20px; }
+		</style>
+		<div>
+			Brightness=<input id="brightness" value="10"> <button value="Make" onclick="makeLight()">Make</button>
+			
+			<button value="Make" onclick="myLight.turnOff(); drawLight();">Turn off</button>
+			<button value="Make" onclick="myLight.turnOn(); drawLight();">Turn on</button>
+		</div>
+		<div id="output">
+		
+		
+		</div>
+		<script src="../js/light-map.js" type="text/javascript"></script>
+		<script src="../js/light-source.js" type="text/javascript"></script>
+		<script type="text/javascript">
+			let myLight = false;
+			function makeLight() {
+				const brightness = document.getElementById('brightness').value;
+				myLight = new LightSource(brightness);
+				drawLight();
+			}
+			
+			function drawLight() {
+				const out = document.getElementById('output');
+				let html = "<table>";
+				for(let y=0; y<myLight.lightMap.height; y++) {
+					html += "<tr>";
+					for(let x=0; x<myLight.lightMap.width; x++) {
+						html += "<td>"+myLight.lightMap.lightAtGrid(x,y)+"</td>";
+					}
+					html+="</tr>";
+				}
+				html+="</table>";
+				out.innerHTML = html;
+			}
+		</script>
+	</body>
+</html>

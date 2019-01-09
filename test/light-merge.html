@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1">
+	</head>
+	<body>
+		<style>
+			body { font-size: 0.65em;}
+			td { width: 20px;}
+			tr { height: 20px; }
+		</style>
+		<div id="output">
+		
+		
+		</div>
+		<script src="../js/light-map.js" type="text/javascript"></script>
+		<script src="../js/light-source.js" type="text/javascript"></script>
+		<script type="text/javascript">
+			/**
+			 * Start the test.
+			 */
+			
+			const myLight1 = new LightSource(5);
+			const myLight2 = new LightSource(5);
+			const myLight3 = new LightSource(5);
+			const myLight4 = new LightSource(25);
+			
+			const myMap = new LightMap(40,40);
+			myMap.mergeWith(20,20, myLight1.lightMap);
+			myMap.mergeWith(15,15, myLight2.lightMap);
+			myMap.mergeWith(8,8, myLight3.lightMap);
+			myMap.mergeWith(1,1,myLight4.lightMap);
+		
+			const out = document.getElementById('output');
+			
+			let html = "<table>";
+			for(let y=0; y<myMap.height; y++) {
+				html += "<tr>";
+				for(let x=0; x<myMap.width; x++) {
+					html += "<td style='color: #ff0000; background-color: rgb("+myMap.lightAtGrid(x,y)*2.5+","+myMap.lightAtGrid(x,y)*2.5+","+myMap.lightAtGrid(x,y)*2.5+")'>"+myMap.lightAtGrid(x,y)+"</td>";
+				}
+				html+="</tr>";
+			}
+			html+="</table>";
+			
+			out.innerHTML = html;
+		
+		</script>
+	</body>
+</html>

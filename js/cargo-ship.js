@@ -35,10 +35,12 @@ class CargoShip extends Sprite {
 		
 		this.courseCorrection = false;
 		this.courseCorrectionDuration = 0;
+
+		this.lightSource = new LightSource(10);
 		
 		this.headForDestination();
 		
-				console.log(this);
+				//console.log(this);
 	}
 	/**
 	 * Pick random destination port
@@ -181,6 +183,14 @@ class CargoShip extends Sprite {
 											 Math.floor(this.worldY/this.world.blockSize), this.discoveryDistance);
 		}
 	}
+	draw() {
+		if(this.isActive) {
+			//this.domElement.style.left = `${Math.round(this.posX)}px`;
+			//this.domElement.style.top = `${Math.round(this.posY)}px`;
+			this.domElement.style.width = `${Math.round(this.width)}px`;
+			this.domElement.style.height = `${Math.round(this.height)}px`;
+		}
+	}
 	/**
 	 * Overide Sprite default move() method, base movement on the current keyState
 	 * Store the new location after moving, then check the block you are moving
@@ -233,10 +243,12 @@ class CargoShip extends Sprite {
 			
 			/* Do course correction */
 			this.courseCorrection = true;
-			this.courseCorrectionDuration = 300;
+			this.courseCorrectionDuration = 90;
+
 			this.direction += 10;
-			this.direction = Math.floor(Math.random()*360);
 			if(this.direction>360) this.direction = this.direction - 360;
+			this.direction = Math.floor(Math.random()*360);
+			
 
 			/* Detect port */
 			let block = this.world.getBlockAt(worldX, worldY);
@@ -244,11 +256,11 @@ class CargoShip extends Sprite {
 			// if port - dock with it / show welcome / etc..
 			if(block==5) {
 				this.dockAtPort(Math.floor(worldX/this.world.blockSize), Math.floor(worldY/this.world.blockSize));
-				console.log(`Ship docked at ${this.dockedAt.name} destination ${this.destination.name}`);
+				//console.log(`Ship docked at ${this.dockedAt.name} destination ${this.destination.name}`);
 				this.pickRandomDestination();
 				this.leavePort();
 				this.headForDestination();
-				console.log(`New destination ${this.destination.name}`);
+				//console.log(`New destination ${this.destination.name}`);
 			}
 
 		}

@@ -24,11 +24,13 @@ class PirateGame {
 
 		this.world = new World(this, 1000,1000,8);	
 		this.worldMap = new WorldMap(this, this.world);
-		this.worldClock = new WorldClock(this, "March 3, 1682 09:00:00");
+		this.worldClock = new WorldClock(this, "March 3, 1682 09:00:00", 25);
+		this.sun = new Sun(this, this.world, this.worldClock, 4, 22);
+		
 		this.player = new Player(this, this.world, this.worldMap, "player1");
 		
 		this.cargoShips = [];
-		for(let x=1; x<2; x++) {
+		for(let x=1; x<25; x++) {
 			this.cargoShips.push(new CargoShip(this, this.world, this.worldMap, `cargo${x}`));
 		}
 		this.viewport = new Viewport(this, this.world, this.player);

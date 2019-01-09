@@ -26,7 +26,9 @@ class Port {
 		this.resources = new ResourceContainer(this);
 		this.resources.add('gold', Math.floor(Math.random()*1000));
 		this.resources.add('wood', Math.floor(Math.random()*1000));
-		this.resources.add('gunpowder', Math.floor(Math.random()*1000));		
+		this.resources.add('gunpowder', Math.floor(Math.random()*1000));	
+		
+		this.lightSource = new LightSource(25);
 	}
 	/**
 	 * Get the HTML for the port docking welcome screen

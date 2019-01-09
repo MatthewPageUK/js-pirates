@@ -30,14 +30,14 @@ div {
 	padding: 0px;
 }
 
-#player1 {
+.player1 {
 	position: absolute;
 	top: 200px;
 	left: 305px;
 	width: 48px;
 	height: 91px;
 	background-image: url(../gfx/player.png);
-	z-index: 10100;
+	z-index: 20100;
 }
 
 #viewport {

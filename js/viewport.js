@@ -35,7 +35,7 @@ class Viewport {
 		this.bufferCanvas.style.left = `${this.width}px`;
 		this.bufferCanvasPaper = this.bufferCanvas.getContext("2d");
 	
-		this.lightMap = [];
+		this.lightMap = new LightMap(this.blocksWide, this.blocksHigh);
 		
 		this.fps = 0;
 		this.lastFrame = false;
@@ -85,35 +85,93 @@ class Viewport {
 		img.src = 'gfx/port.png';
 		
 		/* Change sea colour based on sunlight */
-		let r = 100 * (this.game.worldClock.sunlight/100);
-		let g = 149 * (this.game.worldClock.sunlight/100);
-		let b = 237 * (this.game.worldClock.sunlight/100);
+		let r = 100 * (this.game.sun.sunlight/100);
+		let g = 149 * (this.game.sun.sunlight/100);
+		let b = 237 * (this.game.sun.sunlight/100);
 		this.domElement.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+
 		
-		let sunlight = this.game.worldClock.sunlight/100;
-		/* Light map - populate with sunlight (0-1) */
-		for(let ly = 0; ly <= this.blocksHigh+1; ly++) {
-			this.lightMap[ly] = [];
-			for(let lx=0; lx <= this.blocksWide; lx++) {
-				this.lightMap[ly][lx] = sunlight;
-				if(this.lightMap[ly][lx]<0) this.lightMap[ly][lx] = 0;
-				if(this.lightMap[ly][lx]>1) this.lightMap[ly][lx] = 1;
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		let sunlight = this.game.sun.sunlight;
+		/* Light map - populate with sunlight */
+		for(let ly = 0; ly < this.lightMap.height; ly++) {
+			for(let lx=0; lx < this.lightMap.width; lx++) {
+				this.lightMap.light[ly][lx] = sunlight;
 			}
-			
 		}
 
+		
+		/*
+		
+		 Lightmap
+		 
+		 Translate ports and ships on to the map
+		 
+		 Merge with main map
+		 
+		 */
 
+		this.lightMap.mergeWith(Math.floor(this.blocksWide/2), Math.floor(this.blocksHigh/2), this.player.lightSource.lightMap);
 
+		
+		/* Cargo Ship light */
+		this.game.cargoShips.forEach( (ship) => {
+			/* Is the ship in the viewport ? */
+			if(ship.gridX > startX && ship.gridX < endX && ship.gridY > startY && ship.gridY < endY) {
+				/* Merge the ship light source - light map with the viewport light map */
+				//console.log(ship.lightSource);
+				this.lightMap.mergeWith(ship.gridX-startX,ship.gridY-startY,ship.lightSource.lightMap);
+			}
+		});
+		
+		
+		this.game.world.ports.forEach( (port) => {
+			/* Is the ship in the viewport ? */
+			if(port.gridX > startX && port.gridX < endX && port.gridY > startY && port.gridY < endY) {
+				/* Merge the ship light source - light map with the viewport light map */
+				//console.log(ship.lightSource);
+				this.lightMap.mergeWith(port.gridX-startX,port.gridY-startY,port.lightSource.lightMap);
+			}
+		});
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 
-		/* ports and ships - nasty doing all of them ....*/
+		/* ports and ships - nasty doing all of them ....
 		for(let ly = 0; ly < this.blocksHigh; ly++) {
 			
 			for(let lx=0; lx < this.blocksWide; lx++) {
 			
 				let gridX = startX + lx;
 				let gridY = startY + ly;
-	
-				/* Ship light 		*/	
+	*/
+				/* Ship light 			
 				let distFromShip = Math.sqrt( 
 										Math.pow(Math.abs(gridX-Math.floor(this.player.worldX / this.world.blockSize)),2) +
 										Math.pow(Math.abs(gridY-Math.floor(this.player.worldY / this.world.blockSize)),2) 
@@ -128,15 +186,15 @@ class Viewport {
 				}
 				
 				
-				this.game.cargoShips.forEach( (ship) => {
-					/* Cargo Ship light 		*/	
+				this.game.cargoShips.forEach( (ship) => {*/
+					/* Cargo Ship light 			
 					let distFromShip = Math.sqrt( 
 											Math.pow(Math.abs(gridX-Math.floor(ship.worldX / this.world.blockSize)),2) +
 											Math.pow(Math.abs(gridY-Math.floor(ship.worldY / this.world.blockSize)),2) 
 									);
-					if(distFromShip < 25) {
+					if(distFromShip < 15) {
 
-						let shipLight = (distFromShip/25)*100;
+						let shipLight = (distFromShip/15)*100;
 						if(shipLight>100) shipLight=100;
 						shipLight = 100-shipLight;
 						shipLight = shipLight / 100;
@@ -147,12 +205,12 @@ class Viewport {
 							
 				this.world.ports.forEach( (port) => {
 
-					if(Math.abs(gridX-port.gridX)<25 && Math.abs(gridY-port.gridY)<25) {
+					if(Math.abs(gridX-port.gridX)<55 && Math.abs(gridY-port.gridY)<55) {
 						let distFromPort = Math.sqrt( 
 											Math.pow(Math.abs(gridX-port.gridX),2) +
 											Math.pow(Math.abs(gridY-port.gridY),2) 
 						);
-						let portLight = (7/100)*distFromPort*100;
+						let portLight = (3/100)*distFromPort*100;
 						if(portLight>100) portLight=100;
 						portLight = 100-portLight;
 						portLight = portLight / 100;
@@ -160,7 +218,7 @@ class Viewport {
 					}
 				}); 
 			} 
-		}
+		}*/
 
 		/* Loop through the selected blocks and draw them on screen */
 		let ly = 0;
@@ -170,17 +228,22 @@ class Viewport {
 			let lx = 0;
 			for(let x = startX; x < endX; x++) {
 
-				allLight = (this.lightMap[ly][lx]>1)?1:this.lightMap[ly][lx];
+				allLight = 0;
+				
+				if(ly<this.lightMap.height && lx<this.lightMap.width) {
+					allLight = this.lightMap.light[ly][lx]/100;
+					//console.log(allLight);
+				}
 	
 				if(this.world.blockMap[y][x] == 0) {
 					/* Only paint ocean if it has a different light to the standard sunlight */
-					if(allLight != sunlight) {
+				//	if(allLight != sunlight) {
 						let r = Math.floor(100 * allLight);
 						let g = Math.floor(149 * allLight);
 						let b = Math.floor(237 * allLight);
 						this.paper.fillStyle = `rgb(${r},${g},${b})`;
 						this.paper.fillRect(vpX-offsetX, vpY-offsetY, this.world.blockSize+1, this.world.blockSize+1);
-					}
+				//	}
 				}
 				if(this.world.blockMap[y][x] == 1) {
 					let colour = Math.floor(128 * allLight);
@@ -203,5 +266,20 @@ class Viewport {
 			ly += 1;
 		}
 		//this.paper.drawImage(this.bufferCanvas,0 ,0);
+		
+		/* Cargo ships on screen */
+		this.game.cargoShips.forEach( (ship) => {
+			
+			if(ship.gridX > startX && ship.gridX < endX && ship.gridY > startY && ship.gridY < endY) {
+				ship.domElement.style.display = "block";
+				ship.domElement.style.left = ((ship.gridX - startX) * this.world.blockSize)+"px";
+				ship.domElement.style.top = ((ship.gridY - startY) * this.world.blockSize)+"px";
+			} else {
+				ship.domElement.style.display = "none";
+			}
+			
+		});
+		
+		
 	}
 }

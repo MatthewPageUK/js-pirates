@@ -30,11 +30,13 @@ class Player extends Sprite {
 		this.resources.add('notaresource', 1);
 		this.resources.remove('gold', 25);
 		
-		console.log(this.resources);
+		//console.log(this.resources);
 		
 		/* Start in the middle of the map (hope it's water) */
 		this.worldX = Math.floor(this.world.width/2)*this.world.blockSize;
 		this.worldY = Math.floor(this.world.height/2)*this.world.blockSize;
+		
+		this.lightSource = new LightSource(25);
 	}
 	/**
 	 * Get the grid X position 
