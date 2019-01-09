@@ -12,6 +12,7 @@ For now it's just a random world created with a noise script, and a ship to expl
 - 5 Jan 2019 - Sunrise / sunset simulation, it gets dark at nigh
 - 6 Jan 2019 - Dynamic lighting for the player ship
 - 7 Jan 2019 - Resource containers for ship and ports
+- 8 Jan 2019 - Started cargo ships
 
 Objective - stay alive...
 
