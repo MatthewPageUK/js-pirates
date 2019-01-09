@@ -36,7 +36,7 @@ class CargoShip extends Sprite {
 		this.courseCorrection = false;
 		this.courseCorrectionDuration = 0;
 
-		this.lightSource = new LightSource(10);
+		this.lightSource = new LightSource(25);
 		
 		this.headForDestination();
 		

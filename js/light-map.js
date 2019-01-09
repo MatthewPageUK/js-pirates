@@ -32,6 +32,22 @@ class LightMap {
 		}
 	}
 	/**
+	 * Apply the light at grid x,y to the RGB values
+	 *
+	 * @param {number} x - The X position in the light map
+	 * @param {number} y - The Y position in the light map
+	 * @param {number} r - Red (0-255)
+	 * @param {number} b - Blue (0-255)
+	 * @param {number} g - Green (0-255)
+	 * @returns {string} - HTML style rgb(10,10,10)
+	 */
+	applyLightToRGB(x, y, r, g, b) {
+		r = r * (this.lightAtGrid(x, y)/100);
+		g = g * (this.lightAtGrid(x, y)/100);
+		b = b * (this.lightAtGrid(x, y)/100);
+		return `rgb(${r}, ${g}, ${b})`;
+	}
+	/**
 	 * Get the amount of light at grid X, Y
 	 *
 	 * @param {number} x - The grid X position
@@ -55,8 +71,14 @@ class LightMap {
 		for(let y = 0; y < lightmap.height; y++) {
 			for(let x = 0; x < lightmap.width; x++) {
 				if(y-h+cy < this.height && x-w+cx < this.width && x-w+cx >= 0 && y-h+cy >= 0) {
+					
+					/* Combine by selecting the Max of the two values */
+					this.light[y-h+cy][x-w+cx] = Math.max(lightmap.lightAtGrid(x, y), this.light[y-h+cy][x-w+cx]);
+					
+					/* Combine by adding the two values and constraining to 100
 					this.light[y-h+cy][x-w+cx] += lightmap.lightAtGrid(x, y);
 					if(this.light[y-h+cy][x-w+cx] > 100) this.light[y-h+cy][x-w+cx] = 100;
+					*/
 					
 				}
 			}

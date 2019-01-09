@@ -36,7 +36,7 @@ class Player extends Sprite {
 		this.worldX = Math.floor(this.world.width/2)*this.world.blockSize;
 		this.worldY = Math.floor(this.world.height/2)*this.world.blockSize;
 		
-		this.lightSource = new LightSource(25);
+		this.lightSource = new LightSource(37);
 	}
 	/**
 	 * Get the grid X position 
