@@ -24,17 +24,21 @@ class PirateGame {
 
 		this.world = new World(this, 1000,1000,8);	
 		this.worldMap = new WorldMap(this, this.world);
-		this.worldClock = new WorldClock(this, "March 3, 1682 09:00:00", 25);
+		this.worldClock = new WorldClock(this, "March 3, 1682 19:00:00", 25);
 		this.sun = new Sun(this, this.world, this.worldClock, 4, 22);
 		
 		this.player = new Player(this, this.world, this.worldMap, "player1");
-		
+		this.world.makePorts(35);
 		this.cargoShips = [];
-		for(let x=1; x<25; x++) {
+		for(let x=1; x<20; x++) {
 			this.cargoShips.push(new CargoShip(this, this.world, this.worldMap, `cargo${x}`));
 		}
 		this.viewport = new Viewport(this, this.world, this.player);
 
+		
+		this.shippingScreen = new ShippingScreen(this, this.world, this.world.worldMap, 'shipscreen1');
+
+		this.updateCounter = 0;
 		
 		document.addEventListener("keydown", this, false);
 		document.addEventListener("keyup", this, false);	
@@ -79,6 +83,10 @@ class PirateGame {
 	 * @method update
 	 */
 	update() {
+		if(this.updateCounter % 60 == 0) {
+			// Once per 60 updates
+			this.shippingScreen.update();
+		}
 		if(!this.isPaused) {
 			this.world.update();
 			this.worldClock.update();
@@ -88,7 +96,9 @@ class PirateGame {
 			this.cargoShips.forEach((ship)=>{
 				ship.update();
 			});
+			
 		}
+		this.updateCounter += 1;
 		/* Request this method be called again ... loop forever */
 		window.requestAnimationFrame(() => this.update());
 	}

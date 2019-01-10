@@ -44,9 +44,15 @@ class Sun {
 		} else if(this.clock.hour == this.sunmid) {
 			return 100;
 		} else if(this.clock.hour < this.sunmid) {
-			return Math.floor((100/(this.dayLength-this.sunrise))*(this.clock.hour-this.sunrise)+(((100/60)*this.clock.minute)*((100/(this.dayLength-this.sunrise))/100)));
+			let light = Math.floor((100/(this.dayLength-this.sunrise))*(this.clock.hour-this.sunrise)+(((100/60)*this.clock.minute)*((100/(this.dayLength-this.sunrise))/100)));
+			if(light>100) light = 100;
+			if(light<0) light = 0;
+			return light;
 		} else if(this.clock.hour > this.sunmid) {
-			return Math.floor((100/(this.sunset-this.dayLength))*(this.sunset-this.clock.hour)-(((100/60)*this.clock.minute)*((100/(this.sunset-this.dayLength))/100)));
+			let light = Math.floor((100/(this.sunset-this.dayLength))*(this.sunset-this.clock.hour)-(((100/60)*this.clock.minute)*((100/(this.sunset-this.dayLength))/100)));
+			if(light<0) light = 0;
+			if(light>100) light = 100;
+			return light;
 		}
 	}
 }

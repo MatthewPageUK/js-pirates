@@ -16,6 +16,19 @@ div {
 	background-color: white;
 }
 
+.shippingScreen {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	font-size: 0.8em;
+	padding: 10px;
+	border: 1px solid black;
+	background-color: white;
+	display: none;
+	z-index: 50000;
+}
+
+
 
 #game {
 	width: 100%;

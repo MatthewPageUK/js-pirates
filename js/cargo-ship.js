@@ -20,9 +20,9 @@ class CargoShip extends Sprite {
 		this.domElement = document.getElementById(id);
 		this.dockedAt = false;
 		this.resources = new ResourceContainer(this);
-		this.resources.add('gold', 5);
-		this.resources.add('wood', 5);
-		this.resources.add('gunpowder', 5);
+		this.resources.add('gold', Math.floor(Math.random()*500));
+		this.resources.add('wood', Math.floor(Math.random()*500));
+		this.resources.add('gunpowder', Math.floor(Math.random()*500));
 		
 		this.direction = Math.floor(Math.random()*360);
 		

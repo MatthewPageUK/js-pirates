@@ -39,7 +39,7 @@ class LightSource {
 				this.lightMap.light[y][x] = (percOfLight>0)?Math.floor(percOfLight):0;
 			}
 		}
-		console.log(this.lightMap.light);
+		//console.log(this.lightMap.light);
 	}
 	/**
 	 * Black out the light map

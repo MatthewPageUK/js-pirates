@@ -25,17 +25,19 @@ class Port extends Sprite {
 		this.game.namePorts.splice(index, 1);
 		this.gridX = gridX;
 		this.gridY = gridY;
+		this.worldX = this.gridX * this.game.world.blockSize;
+		this.worldY = this.gridX * this.game.world.blockSize;
 		
 		this.makeDomElement('port');
 		this.domElement = document.getElementById(this.id);
-		this.domElement.textContent = this.name;
+		this.domElement.textContent = "Unkown port";
 
 		this.resources = new ResourceContainer(this);
 		this.resources.add('gold', Math.floor(Math.random()*1000));
 		this.resources.add('wood', Math.floor(Math.random()*1000));
 		this.resources.add('gunpowder', Math.floor(Math.random()*1000));	
 		
-		this.lightSource = new LightSource(25);
+		this.lightSource = new LightSource(10);
 		
 		this.draw();
 	}

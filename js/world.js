@@ -32,7 +32,7 @@ class World {
 		this.ports = [];
 		this.makeBlockArray();
 		this.makeNoiseMap();
-		this.makePorts(35);
+
 	}
 	/**
 	 * Main update loop.
@@ -82,8 +82,10 @@ class World {
 				value *= 256;
 				if(value > 75 && value < 80) {
 					this.blockMap[y][x] = 2; // Beach
-				} else if(value > 75) {
+				} else if(value > 75 && value < 120) {
 					this.blockMap[y][x] = 1; // Land
+				} else if(value > 120) {
+					this.blockMap[y][x] = 3; // Inner land?
 				} else {
 					this.blockMap[y][x] = 0; // Ocean
 				}
@@ -99,9 +101,12 @@ class World {
 	 * @returns {boolean}
 	 */
 	getBlockAtGrid(gridX,gridY) {
-		if(gridX < 0 || gridX > 999 || gridY < 0 || gridY > 999) return 0;
-		return (this.blockMap[gridY][gridX]);
-	}
+		if(gridX < 0 || gridX > this.width || gridY < 0 || gridY > this.height) {
+			return 0;
+		} else {
+			return (this.blockMap[gridY][gridX]);
+		}
+	}	
 	/**
 	 * Return the value of the block at worldX, worldY
 	 *
@@ -124,8 +129,13 @@ class World {
 	 * @returns {boolean}
 	 */
 	isOceanAtGrid(gridX,gridY) {
-		if(gridX < 0 || gridX > 999 || gridY < 0 || gridY > 999) return true;
-		return (this.blockMap[gridY][gridX] == 0);
+		if(gridX < 0 || gridX >= this.width || gridY < 0 || gridY >= this.height) {
+			return true;
+		} else if(this.blockMap[gridY][gridX] == 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	/**
 	 * Is the block at the grid X, Y land or not

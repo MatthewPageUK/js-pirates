@@ -62,6 +62,8 @@ class Player extends Sprite {
 		this.world.ports.forEach( (port) => {
 			if(port.gridX == gridX && port.gridY == gridY) {
 				this.dockedAt = port;
+				this.dockedAt.domElement.textContent = this.dockedAt.name;
+				this.dockedAt.lightSource = new LightSource(25);
 				let a = document.getElementById('portDockScreen');
 				/* Show the port welcome screen */
 				a.style.display = 'block';
@@ -186,10 +188,18 @@ class Player extends Sprite {
 			} else {
 			
 				/* Detect port */
-				let block = this.world.getBlockAt(worldX, worldY);
+				let blocks = [ this.world.getBlockAt(worldX, worldY), 
+							  this.world.getBlockAt(worldX-this.world.blockSize, worldY),
+							  this.world.getBlockAt(worldX, worldY-this.world.blockSize),
+							  this.world.getBlockAt(worldX+this.world.blockSize, worldY),
+							  this.world.getBlockAt(worldX, worldY+this.world.blockSize),
+							  this.world.getBlockAt(worldX-this.world.blockSize, worldY-this.world.blockSize),
+							  this.world.getBlockAt(worldX+this.world.blockSize, worldY+this.world.blockSize),
+							  this.world.getBlockAt(worldX-this.world.blockSize, worldY+this.world.blockSize),
+							  this.world.getBlockAt(worldX+this.world.blockSize, worldY-this.world.blockSize) ];
 				
 				// if port - dock with it / show welcome / etc..
-				if(block==5) {
+				if(blocks.indexOf(5)!=-1) {
 					this.dockAtPort(Math.floor(worldX/this.world.blockSize), Math.floor(worldY/this.world.blockSize));
 				}
 				
