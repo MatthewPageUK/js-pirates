@@ -17,7 +17,7 @@ class Port extends Sprite {
 	 */
 	constructor(game, gridX, gridY) {
 		/* Sprite(game, id, posX, posY, width, height, velocity, direction, hitPoints) */
-		super(game, `port${Math.floor(Math.random()*1000)}`, -100, -100, 125, 25, 0, 0, 25);
+		super(game, `port${Math.floor(Math.random()*1000)}`, -100, -100, 160, 35, 0, 0, 25);
 
 		this.game = game;
 		let index = Math.floor(Math.random()*this.game.namePorts.length);

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1">
+	</head>
+	<body>
+		<style>
+			body { font-size: 0.65em;}
+			td { width: 20px;}
+			tr { height: 20px; }
+		</style>
+		<div>
+			Brightness=<input id="brightness" value="10"> <button value="Make" onclick="makeLight()">Make</button>
+			
+			<button value="Make" onclick="myLight.turnOff(); drawLight();">Turn off</button>
+			<button value="Make" onclick="myLight.turnOn(); drawLight();">Turn on</button>
+		</div>
+		<div id="output">
+		
+		
+		</div>
+		<script src="../zDev/mp-astar.js" type="text/javascript"></script>
+		<script type="text/javascript">
+var path;
+var openSet = new Set();
+var closedSet = new Set();
+var gridPointsByPos = [];
+var gridPoints = [];
+var wallSet = new Set;
+var myPath;
+var grid;
+
+var startPoint;
+var endPoint;
+
+startPoint = { x: 1, y: 1 };
+endPoint = { x: 8, y: 38 };			
+grid = new Grid(40, 40);
+grid.createGrid();
+myPath = new PathFindingAlg(grid, startPoint, endPoint);
+myPath.findPath();
+			
+			
+// draw the grid
+			html = "<table>";
+			let gp = 0;
+			for(let y = 0; y < grid.height; y++) {
+				html+="<tr>";
+				for(let x = 0; x < grid.width; x++) {
+					
+					gp = y+(x*grid.width);
+					
+					html += "<td>";
+					if(startPoint.x == x && startPoint.y == y) {
+						html+="S";
+					} else if(endPoint.x == x && endPoint.y == y) {
+						html+="E"
+					} else if(gridPoints[gp].inPath) {
+						html += "P";
+					} else {
+						html += (!gridPoints[gp].walkable)?"X":".";
+					}
+					html += "</td>";
+					gp += 1;
+				}
+				html+="</tr>";
+			}
+			html+="</table>";
+			
+			let out = document.getElementById('output');
+			out.innerHTML = html;
+// draw the path
+			
+			
+console.log(path);
+			
+		</script>
+	</body>
+</html>

@@ -127,58 +127,7 @@ class Viewport {
 				}
 				if(this.world.blockMap[y][x] == 2) {
 					this.paper.fillStyle = this.lightMap.applyLightToRGB(lx, ly, 255, 255, 0);
-					//this.paper.fillRect(vpX-offsetX, vpY-offsetY, this.world.blockSize+1, this.world.blockSize+1);
-					
-					
-					let done=false;
-					/* Land\Ocean */
-					if(this.world.isOceanAtGrid(x, y-1) && this.world.isOceanAtGrid(x+1, y) && 
-					   this.world.isLandAtGrid(x, y+1) && this.world.isLandAtGrid(x-1, y) ) {
-						this.paper.beginPath();
-						this.paper.moveTo(vpX-offsetX, vpY-offsetY);
-						this.paper.lineTo(vpX-offsetX+this.world.blockSize, vpY-offsetY+this.world.blockSize);
-						this.paper.lineTo(vpX-offsetX, vpY-offsetY+this.world.blockSize);
-						this.paper.fill();
-						done=true;
-							
-					}
-					/* Ocean/Land */
-					if(!done && this.world.isOceanAtGrid(x, y-1) && this.world.isOceanAtGrid(x-1, y) && 
-						this.world.isLandAtGrid(x, y+1) && this.world.isLandAtGrid(x+1, y) ) {
-	
-						this.paper.beginPath();
-						this.paper.moveTo(vpX-offsetX, vpY-offsetY+this.world.blockSize);
-						this.paper.lineTo(vpX-offsetX+this.world.blockSize, vpY-offsetY);
-						this.paper.lineTo(vpX-offsetX+this.world.blockSize, vpY-offsetY+this.world.blockSize);
-						this.paper.fill();
-						done=true;
-					} 
-
-					/* Land/Ocean */
-					if(!done && this.world.isOceanAtGrid(x+1, y) && this.world.isOceanAtGrid(x, y+1) && 
-						this.world.isLandAtGrid(x, y-1) && this.world.isLandAtGrid(x-1, y) ) {
-						this.paper.beginPath();
-						this.paper.moveTo(vpX-offsetX+this.world.blockSize, vpY-offsetY);
-						this.paper.lineTo(vpX-offsetX, vpY-offsetY+this.world.blockSize);
-						this.paper.lineTo(vpX-offsetX, vpY-offsetY);
-						this.paper.fill();
-						done=true;
-					} 
-
-					/* Ocean\Land */
-					if(!done && this.world.isOceanAtGrid(x-1, y) && this.world.isOceanAtGrid(x, y+1) && 
-						this.world.isLandAtGrid(x+1, y) && this.world.isLandAtGrid(x, y-1) ) {
-						this.paper.beginPath();
-						this.paper.moveTo(vpX-offsetX, vpY-offsetY);
-						this.paper.lineTo(vpX-offsetX+this.world.blockSize, vpY-offsetY+this.world.blockSize);
-						this.paper.lineTo(vpX-offsetX+this.world.blockSize, vpY-offsetY);
-						this.paper.fill();
-						done=true;
-					} 
-					
-					if(!done) {
-						this.paper.fillRect(vpX-offsetX, vpY-offsetY, this.world.blockSize+1, this.world.blockSize+1);
-					}
+					this.paper.fillRect(vpX-offsetX, vpY-offsetY, this.world.blockSize+1, this.world.blockSize+1);
 				}
 				if(this.world.blockMap[y][x] == 3) {
 					this.paper.fillStyle = this.lightMap.applyLightToRGB(lx, ly, 128, 255, 128);

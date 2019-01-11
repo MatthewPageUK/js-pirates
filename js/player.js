@@ -62,7 +62,7 @@ class Player extends Sprite {
 		this.world.ports.forEach( (port) => {
 			if(port.gridX == gridX && port.gridY == gridY) {
 				this.dockedAt = port;
-				this.dockedAt.domElement.textContent = this.dockedAt.name;
+				this.dockedAt.domElement.innerHTML = `${this.dockedAt.name}<br>G : ${this.resources.quantity('gold')} W : ${this.resources.quantity('wood')}`;
 				this.dockedAt.lightSource = new LightSource(25);
 				let a = document.getElementById('portDockScreen');
 				/* Show the port welcome screen */

@@ -13,7 +13,7 @@
 class ShippingScreen extends Sprite {
 	constructor(game, world, worldMap, id) {
 		/* Sprite(game, id, posX, posY, width, height, velocity, direction, hitPoints) */
-		super(game, id, 200, 50, 600, 500, 0, 90, 1);
+		super(game, id, 350, 50, 480, 450, 0, 90, 1);
 		
 		this.world = world;
 		this.worldMap = worldMap;
